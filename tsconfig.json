@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "jsx": "react-jsx",
+        "strict": true,
+        "noEmit": true,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "types": ["vite/client", "node"],
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["resources/js/simulations/*"]
+        }
+    },
+    "include": ["resources/js/simulations/**/*", "scripts/**/*.ts"]
+}

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#E9EBE4;-webkit-font-smoothing:antialiased}
+  a{color:#8A5228;text-decoration:none}
+  a:hover{color:#0C120F}
+  :focus-visible{outline:3px solid #B4703A;outline-offset:2px;border-radius:2px}
+  [data-bar]{transform:scaleX(0);transform-origin:left;transition:transform 650ms cubic-bezier(.16,.84,.44,1)}
+  [data-bar="in"]{transform:scaleX(var(--v))}
+  [data-btn]{font-family:Archivo,sans-serif;cursor:pointer;border:none;transition:transform 150ms cubic-bezier(.16,.84,.44,1),background-color 150ms linear}
+  [data-btn]:hover{transform:translateY(-1px)}
+  [data-btn]:active{transform:translateY(0) scale(.99)}
+  [data-chip]{font-family:Archivo,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;padding:6px 10px;border-radius:4px;border:1px solid rgba(12,25,20,.2);background:#E9EBE4;color:#39443E;transition:transform 150ms cubic-bezier(.16,.84,.44,1),background-color 150ms linear}
+  [data-chip]:hover{transform:translateY(-1px)}
+  [data-chip="on"]{background:#0F2A22;border-color:#0F2A22;color:#E9EBE4}
+  [data-field]{font-family:Archivo,sans-serif;font-size:14px;color:#0C120F;background:#FFFDF9;border:1.5px solid rgba(12,25,20,.22);border-radius:5px;padding:9px 10px;min-height:42px}
+  [data-shortcut]{font-family:Archivo,sans-serif;cursor:pointer;text-align:left;width:100%;display:flex;align-items:center;gap:11px;padding:13px 14px;min-height:52px;background:#FFFDF9;border:1px solid rgba(12,25,20,.14);border-left:3px solid #B4703A;border-radius:5px;transition:transform 150ms cubic-bezier(.16,.84,.44,1),background-color 150ms linear}
+  [data-shortcut]:hover{transform:translateY(-1px);background:#FFF}
+  @keyframes toast{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes shimmer{0%{opacity:.5}50%{opacity:.85}100%{opacity:.5}}
+  [data-skel]{background:#DEE1D8;border-radius:3px;animation:shimmer 1200ms ease-in-out infinite}
+  @media (max-width:639px){[data-topnav]{display:none}}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none !important;transition:none !important}[data-bar]{transform:scaleX(var(--v))}}
+</style>
+</helmet>
+<div style="--board:#0F2A22;--board2:#17392E;--paper:#E9EBE4;--paper2:#DEE1D8;--card:#FFFDF9;--ink:#0C120F;--copper:#B4703A;--copper-dk:#8A5228;--pass:#2F7D55;--caution:#B07610;--fail:#A93227;--muted:#5F6C66;--e1:0 1px 2px rgba(12,25,20,.10);--e2:0 8px 20px -8px rgba(12,25,20,.22);--e3:0 26px 50px -18px rgba(12,25,20,.45);font-family:Archivo,'Helvetica Neue',Helvetica,sans-serif;color:var(--ink);min-height:100vh;background:var(--paper)">
+
+  <header style="display:flex;align-items:center;gap:14px;padding:12px clamp(14px,3vw,32px);background:var(--board);color:#E4E8E0;position:sticky;top:0;z-index:30">
+    <a href="EPAS Landing.dc.html" style="display:flex;align-items:center;gap:10px;color:#E4E8E0;flex:none">
+      <svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true" style="display:block"><rect x="1" y="1" width="28" height="28" rx="2" fill="#17392E"></rect><path d="M6 21 L6 15 L11 10 L24 10" fill="none" stroke="#B4703A" stroke-width="2"></path><circle cx="6" cy="21" r="2.4" fill="#DEE1D8"></circle><circle cx="24" cy="10" r="2.4" fill="#DEE1D8"></circle></svg>
+      <span style="font-weight:700;font-size:14.5px;white-space:nowrap">EPAS NC II</span>
+    </a>
+    <nav data-topnav style="display:flex;gap:2px;flex:1;justify-content:center;min-width:0">
+      <a href="#" style="padding:8px 12px;font-size:14px;font-weight:600;color:#E4E8E0;border-bottom:2px solid var(--copper);white-space:nowrap">Classes</a>
+      <a href="#" style="padding:8px 12px;font-size:14px;color:#B5BEB6;white-space:nowrap">Lessons</a>
+      <a href="#" style="padding:8px 12px;font-size:14px;color:#B5BEB6;white-space:nowrap">Quizzes</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;flex:none;margin-left:auto">
+      <span style="padding:5px 9px;background:rgba(233,235,228,.1);border-radius:4px;font-size:11.5px;font-weight:600;white-space:nowrap">Instructor</span>
+      <span style="width:32px;height:32px;border-radius:4px;background:var(--copper);color:#FFF8F1;display:grid;place-items:center;font-size:12.5px;font-weight:700">MV</span>
+    </div>
+  </header>
+
+  <main style="max-width:1240px;margin:0 auto;padding:clamp(18px,3vw,32px) clamp(14px,3vw,32px) 64px">
+
+    <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:flex-end;margin-bottom:20px">
+      <div>
+        <h1 style="margin:0 0 5px;font-size:clamp(22px,3vw,30px);line-height:1.1;letter-spacing:-.02em;font-weight:700">Grade 12 Ampere</h1>
+        <p style="margin:0;font-size:14.5px;color:var(--muted)">32 students, EPAS NC II, second semester</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#39443E">Section
+          <select data-field aria-label="Choose section">
+            <option>Grade 12 Ampere</option>
+            <option>Grade 12 Watt</option>
+            <option>Grade 11 Volt</option>
+            <option>Grade 11 Ohm</option>
+          </select>
+        </label>
+        <div style="display:flex;gap:7px">
+          <button type="button" data-chip="{{ cReady }}" onClick="{{ setReady }}">Normal</button>
+          <button type="button" data-chip="{{ cLoading }}" onClick="{{ setLoading }}">Loading</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:12px;margin-bottom:clamp(16px,2.4vw,22px)">
+      <div style="background:var(--card);border:1px solid rgba(12,25,20,.12);border-radius:6px;padding:15px;box-shadow:var(--e1)">
+        <p style="margin:0 0 6px;font-size:13px;color:var(--muted)">Students enrolled</p>
+        <p style="margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1">32</p>
+        <p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">28 opened a module this week</p>
+      </div>
+      <div style="background:var(--card);border:1px solid rgba(12,25,20,.12);border-radius:6px;padding:15px;box-shadow:var(--e1)">
+        <p style="margin:0 0 6px;font-size:13px;color:var(--muted)">Average quiz score</p>
+        <p style="margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1">78<span style="font-size:18px;font-weight:600">%</span></p>
+        <p style="margin:6px 0 0;font-size:12.5px;color:var(--pass);font-weight:600">Up from 71% last month</p>
+      </div>
+      <div style="background:var(--board);color:#E4E8E0;border-radius:6px;padding:15px;box-shadow:var(--e2)">
+        <p style="margin:0 0 6px;font-size:13px;color:#9FAAA2">Waiting for your sign-off</p>
+        <p style="margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1">{{ queueCount }}</p>
+        <p style="margin:6px 0 0;font-size:12.5px;color:#B5BEB6">Oldest one is 4 days na</p>
+      </div>
+      <div style="background:var(--card);border:1px solid rgba(169,50,39,.4);border-top:3px solid var(--fail);border-radius:6px;padding:15px;box-shadow:var(--e1)">
+        <p style="margin:0 0 6px;font-size:13px;color:var(--muted)">Falling behind</p>
+        <p style="margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1;color:#8A241C">5</p>
+        <p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">No activity for 7 days or more</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(14px,2vw,22px);align-items:start">
+
+      <div style="display:grid;gap:clamp(14px,2vw,20px);min-width:0">
+
+        <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--card);border:1px solid rgba(12,25,20,.12);border-radius:6px;padding:18px;box-shadow:var(--e1)">
+            <div data-skel style="width:190px;height:14px;margin-bottom:16px"></div>
+            <div data-skel style="width:100%;height:62px;margin-bottom:10px"></div>
+            <div data-skel style="width:100%;height:62px;margin-bottom:10px"></div>
+            <div data-skel style="width:100%;height:62px"></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isReady }}" hint-placeholder-val="{{ true }}">
+          <section style="background:var(--card);border:1px solid rgba(12,25,20,.12);border-radius:6px;box-shadow:var(--e2);overflow:hidden">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:baseline;padding:16px 16px 13px;border-bottom:1px solid rgba(12,25,20,.1)">
+              <div>
+                <h2 style="margin:0 0 3px;font-size:17px;font-weight:700;letter-spacing:-.01em">Check these today</h2>
+                <p style="margin:0;font-size:13.5px;color:var(--muted)">Job sheets submitted for sign-off against the performance criteria.</p>
+              </div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#39443E">{{ queueCount }} left</span>
+            </div>
+
+            <sc-if value="{{ queueEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:clamp(22px,3vw,34px);text-align:center;animation:rise 220ms cubic-bezier(.16,.84,.44,1) both">
+                <svg viewBox="0 0 60 60" width="52" aria-hidden="true" style="display:block;margin:0 auto 14px"><circle cx="30" cy="30" r="28" fill="none" stroke="#2F7D55" stroke-width="3" stroke-opacity=".45"></circle><path d="M17 31 L26 40 L44 20" fill="none" stroke="#2F7D55" stroke-width="4"></path></svg>
+                <h3 style="margin:0 0 7px;font-size:18px;font-weight:700">Wala nang naghihintay</h3>
+                <p style="margin:0 0 16px;font-size:14.5px;line-height:1.5;color:#39443E;max-width:44ch;margin-left:auto;margin-right:auto">Everyone you signed off got their competency credited. Next batch shows up here as students submit.</p>
+                <button type="button" data-btn onClick="{{ resetQueue }}" style="min-height:44px;padding:0 16px;background:var(--paper2);color:var(--ink);font-size:14px;font-weight:600;border-radius:5px">Put the queue back, for the demo</button>
+              </div>
+            </sc-if>
+
+            <ul style="list-style:none;margin:0;padding:0">
+              <sc-for list="{{ queue }}" as="item" hint-placeholder-count="3">
+                <li style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(12,25,20,.07)">
+                  <span style="width:36px;height:36px;border-radius:4px;background:var(--paper2);display:grid;place-items:center;font-size:12.5px;font-weight:700;color:#33403A;flex:none">{{ item.initials }}</span>
+                  <span style="flex:1;min-width:150px">
+                    <span style="display:block;font-size:14.5px;font-weight:600">{{ item.name }}</span>
+                    <span style="display:block;font-size:13px;color:#39443E;margin-top:2px">{{ item.sheet }}</span>
+                    <span style="display:block;font-size:12px;color:var(--muted);margin-top:2px">{{ item.when }}</span>
+                  </span>
+                  <span style="display:flex;gap:8px;flex:none">
+                    <button type="button" data-btn onClick="{{ item.pass }}" style="min-height:44px;padding:0 14px;background:var(--pass);color:#FFFDF9;font-size:14px;font-weight:600;border-radius:5px">Mark achieved</button>
+                    <button type="button" data-btn onClick="{{ item.redo }}" style="min-height:44px;padding:0 14px;background:var(--card);border:1.5px solid rgba(12,25,20,.24);color:var(--ink);font-size:14px;font-weight:600;border-radius:5px">Ask to redo</button>
+                  </span>
+                </li>
+              </sc-for>
+            </ul>
+          </section>
+
+          <section style="background:var(--card);border:1px solid rgba(12,25,20,.12);border-radius:6px;box-shadow:var(--e1);overflow:hidden">
+            <div style="padding:16px 16px 13px;border-bottom:1px solid rgba(12,25,20,.1)">
+              <h2 style="margin:0 0 3px;font-size:17px;font-weight:700;letter-spacing:-.01em">Students falling behind</h2>
+              <p style="margin:0;font-size:13.5px;color:var(--muted)">Sorted by how long they have been stuck.</p>
+            </div>
+            <ul style="list-style:none;margin:0;padding:0">
+              <li style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(12,25,20,.07)">
+                <span style="flex:1;min-width:180px">
+                  <span style="display:block;font-size:14.5px;font-weight:600">Ancheta, Kim Ryan</span>
+                  <span style="display:block;font-size:13px;color:#8A241C;margin-top:2px">No activity for 14 days, still on Module 1</span>
+                </span>
+                <span style="height:6px;width:110px;background:var(--paper2);border-radius:2px;overflow:hidden;flex:none"><span data-bar style="--v:.08;display:block;height:100%;background:var(--fail);border-radius:2px"></span></span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;flex:none;width:40px;text-align:right">8%</span>
+                <button type="button" data-btn onClick="{{ toastMessage }}" style="min-height:44px;padding:0 13px;background:var(--paper);border:1.5px solid rgba(12,25,20,.2);font-size:13.5px;font-weight:600;border-radius:5px;flex:none">Message</button>
+              </li>
+              <li style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(12,25,20,.07)">
+                <span style="flex:1;min-width:180px">
+                  <span style="display:block;font-size:14.5px;font-weight:600">Bautista, Mary Joy</span>
+                  <span style="display:block;font-size:13px;color:#8A241C;margin-top:2px">Failed Self-check 2.2 twice, no retake yet</span>
+                </span>
+                <span style="height:6px;width:110px;background:var(--paper2);border-radius:2px;overflow:hidden;flex:none"><span data-bar style="--v:.22;display:block;height:100%;background:var(--fail);border-radius:2px"></span></span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;flex:none;width:40px;text-align:right">22%</span>
+                <button type="button" data-btn onClick="{{ toastMessage }}" style="min-height:44px;padding:0 13px;background:var(--paper);border:1.5px solid rgba(12,25,20,.2);font-size:13.5px;font-weight:600;border-radius:5px;flex:none">Message</button>
+              </li>
+              <li style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(12,25,20,.07)">
+                <span style="flex:1;min-width:180px">
+                  <span style="display:block;font-size:14.5px;font-weight:600">Molina, Jerome</span>
+                  <span style="display:block;font-size:13px;color:#7A5109;margin-top:2px">No activity for 9 days, Module 2 half done</span>
+                </span>
+                <span style="height:6px;width:110px;background:var(--paper2);border-radius:2px;overflow:hidden;flex:none"><span data-bar style="--v:.34;display:block;height:100%;background:var(--caution);border-radius:2px"></span></span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;flex:none;width:40px;text-align:right">34%</span>
+                <button type="button" data-btn onClick="{{ toastMessage }}" style="min-height:44px;padding:0 13px;background:var(--paper);border:1.5px solid rgba(12,25,20,.2);font-size:13.5px;font-weight:600;border-radius:5px;flex:none">Message</button>
+              </li>
+              <li style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:13px 16px">
+                <span style="flex:1;min-width:180px">
+                  <span style="display:block;font-size:14.5px;font-weight:600">Sarmiento, Angel Rose</span>
+                  <span style="display:block;font-size:13px;color:#7A5109;margin-top:2px">No activity for 7 days, quiz average 62%</span>
+                </span>
+                <span style="height:6px;width:110px;background:var(--paper2);border-radius:2px;overflow:hidden;flex:none"><span data-bar style="--v:.41;display:block;height:100%;background:var(--caution);border-radius:2px"></span></span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;flex:none;width:40px;text-align:right">41%</span>
+                <button type="button" data-btn onClick="{{ toastMessage }}" style="min-height:44px;padding:0 13px;background:var(--paper);border:1.5px solid rgba(12,25,20,.2);font-size:13.5px;font-weight:600;border-radius:5px;flex:none">Message</button>
+              </li>
+            </ul>
+            <div style="padding:13px 16px;background:var(--paper);border-top:1px solid rgba(12,25,20,.08)">
+              <p style="margin:0;font-size:13.5px;color:#39443E">Kim Ryan has not opened anything since 23 August. Tumawag na kami sa guardian noong Monday.</p>
+            </div>
+          </section>
+        </sc-if>
+      </div>
+
+      <div style="display:grid;gap:clamp(14px,2vw,20px);min-width:0">
+        <section style="background:var(--card);border:1px solid rgba(12,25,20,.12);border-radius:6px;box-shadow:var(--e1);padding:16px">
+          <h2 style="margin:0 0 12px;font-size:16px;font-weight:700;letter-spacing:-.01em">Start something</h2>
+          <div style="display:grid;gap:9px">
+            <button type="button" data-shortcut onClick="{{ toastLesson }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex:none"><rect x="2" y="2" width="16" height="16" rx="1.5" fill="none" stroke="#0F2A22" stroke-width="1.6"></rect><path d="M5.5 7 H14.5 M5.5 10.5 H14.5 M5.5 14 H11" stroke="#0F2A22" stroke-width="1.6"></path></svg>
+              <span><span style="display:block;font-size:14.5px;font-weight:600">Write a lesson</span><span style="display:block;font-size:12.5px;color:var(--muted)">Information sheet, from a CBLM page</span></span>
+            </button>
+            <button type="button" data-shortcut onClick="{{ toastQuiz }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex:none"><circle cx="10" cy="10" r="8" fill="none" stroke="#0F2A22" stroke-width="1.6"></circle><path d="M6.5 10.5 L9 13 L14 7.5" fill="none" stroke="#0F2A22" stroke-width="1.6"></path></svg>
+              <span><span style="display:block;font-size:14.5px;font-weight:600">Build a quiz</span><span style="display:block;font-size:12.5px;color:var(--muted)">Self-check items, 10 by default</span></span>
+            </button>
+            <button type="button" data-shortcut onClick="{{ toastPost }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex:none"><path d="M3 7 H12 L17 3 V17 L12 13 H3 Z" fill="none" stroke="#0F2A22" stroke-width="1.6"></path></svg>
+              <span><span style="display:block;font-size:14.5px;font-weight:600">Post an announcement</span><span style="display:block;font-size:12.5px;color:var(--muted)">Shows on the section's dashboard</span></span>
+            </button>
+          </div>
+        </section>
+
+        <section style="background:var(--card);border:1px solid rgba(12,25,20,.12);border-radius:6px;box-shadow:var(--e1);padding:16px">
+          <h2 style="margin:0 0 4px;font-size:16px;font-weight:700;letter-spacing:-.01em">Class progress</h2>
+          <p style="margin:0 0 14px;font-size:13px;color:var(--muted)">Average across 32 students.</p>
+          <div style="display:grid;gap:13px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px"><span>Assemble electronic products</span><span style="font-family:'IBM Plex Mono',monospace;color:#39443E">78%</span></div>
+              <div style="height:8px;background:var(--paper2);border-radius:2px;overflow:hidden"><div data-bar style="--v:.78;height:100%;background:var(--pass);border-radius:2px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px"><span>Technical drawings</span><span style="font-family:'IBM Plex Mono',monospace;color:#39443E">54%</span></div>
+              <div style="height:8px;background:var(--paper2);border-radius:2px;overflow:hidden"><div data-bar style="--v:.54;height:100%;background:var(--caution);border-radius:2px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px"><span>Hand tools and instruments</span><span style="font-family:'IBM Plex Mono',monospace;color:#39443E">46%</span></div>
+              <div style="height:8px;background:var(--paper2);border-radius:2px;overflow:hidden"><div data-bar style="--v:.46;height:100%;background:var(--caution);border-radius:2px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px"><span>Wiring and circuits</span><span style="font-family:'IBM Plex Mono',monospace;color:#39443E">31%</span></div>
+              <div style="height:8px;background:var(--paper2);border-radius:2px;overflow:hidden"><div data-bar style="--v:.31;height:100%;background:var(--fail);border-radius:2px"></div></div>
+            </div>
+          </div>
+          <p style="margin:14px 0 0;font-size:13px;line-height:1.45;color:#39443E;padding-top:12px;border-top:1px solid rgba(12,25,20,.1)">Wiring is the weakest. Consider one more demo before the practical exam.</p>
+        </section>
+
+        <section style="background:var(--paper2);border:1px solid rgba(12,25,20,.12);border-radius:6px;padding:16px">
+          <h2 style="margin:0 0 4px;font-size:16px;font-weight:700;letter-spacing:-.01em">Hardest quiz item</h2>
+          <p style="margin:0 0 10px;font-size:13.5px;line-height:1.45;color:#39443E">Only 9 of 32 got this right in Self-check 2.2.</p>
+          <p style="margin:0;padding:12px;background:var(--card);border-radius:5px;font-size:14px;line-height:1.45">Which line on the schematic shows a shielded cable, and what does the dashed outline mean?</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div role="status" aria-live="polite" style="position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:50;max-width:calc(100% - 28px)">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--board);color:#E4E8E0;border-radius:6px;box-shadow:var(--e3);animation:toast 220ms cubic-bezier(.16,.84,.44,1) both">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--pass);flex:none"></span>
+        <p style="margin:0;font-size:14px;line-height:1.35">{{ toastText }}</p>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;State&quot;},&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:940}}">
+class Component extends DCLogic {
+  seed(){
+    return [
+      { id: 1, initials: 'RA', name: 'Aguilar, Rey Mark', sheet: 'Job sheet 3.2, solder 12 resistors on the trainer board', when: 'Submitted 2 September, 4 days ago' },
+      { id: 2, initials: 'JD', name: 'Dela Cruz, Jhon Rey', sheet: 'Job sheet 3.2, solder 12 resistors on the trainer board', when: 'Submitted 4 September' },
+      { id: 3, initials: 'LG', name: 'Galvez, Lianne', sheet: 'Job sheet 3.1, identify components on a PCB', when: 'Submitted 4 September' },
+      { id: 4, initials: 'PM', name: 'Manalo, Paolo', sheet: 'Job sheet 2.3, sketch the circuit from the spec', when: 'Submitted yesterday' },
+      { id: 5, initials: 'CR', name: 'Reyes, Christine', sheet: 'Job sheet 3.1, identify components on a PCB', when: 'Submitted yesterday' },
+      { id: 6, initials: 'AT', name: 'Tolentino, Aljon', sheet: 'Job sheet 1.2, set up the workbench safely', when: 'Submitted today, 7:12 AM' },
+      { id: 7, initials: 'MV', name: 'Villar, Mikaela', sheet: 'Job sheet 3.2, solder 12 resistors on the trainer board', when: 'Submitted today, 8:03 AM' }
+    ];
+  }
+  state = { view: 'ready', queue: this.seed(), toast: null };
+
+  componentDidMount(){ this.fill(); if (this.props.startView) this.setState({ view: this.props.startView }); }
+  componentDidUpdate(){ this.fill(); }
+  componentWillUnmount(){ if (this.tt) clearTimeout(this.tt); }
+
+  fill(){ requestAnimationFrame(() => { document.querySelectorAll('[data-bar=""]').forEach(n => n.setAttribute('data-bar','in')); }); }
+
+  say(msg){
+    if (this.tt) clearTimeout(this.tt);
+    this.setState({ toast: msg });
+    this.tt = setTimeout(() => this.setState({ toast: null }), 3400);
+  }
+  drop(id, msg){ this.setState(s => ({ queue: s.queue.filter(q => q.id !== id) })); this.say(msg); }
+
+  renderVals(){
+    const { view, queue, toast } = this.state;
+    const flag = (b) => b ? 'on' : 'off';
+    const first = (n) => n.split(', ')[1] || n;
+    return {
+      isReady: view === 'ready', isLoading: view === 'loading',
+      cReady: flag(view === 'ready'), cLoading: flag(view === 'loading'),
+      setReady: () => this.setState({ view: 'ready' }), setLoading: () => this.setState({ view: 'loading' }),
+      queue: queue.map(q => ({
+        ...q,
+        pass: () => this.drop(q.id, 'Marked achieved. ' + first(q.name) + ' now sees the competency credited.'),
+        redo: () => this.drop(q.id, 'Sent back to ' + first(q.name) + ' with your note to redo it.')
+      })),
+      queueCount: queue.length, queueEmpty: queue.length === 0,
+      resetQueue: () => this.setState({ queue: this.seed() }),
+      toastMessage: () => this.say('Message sent. It shows on the student dashboard and stays until read.'),
+      toastLesson: () => this.say('New lesson draft opened. Nothing goes live until you press Publish.'),
+      toastQuiz: () => this.say('New quiz, 10 blank items, assigned to Grade 12 Ampere.'),
+      toastPost: () => this.say('Announcement draft opened for Grade 12 Ampere.'),
+      hasToast: !!toast, toastText: toast || ''
+    };
+  }
+}
+</script>
+</body>
+</html>

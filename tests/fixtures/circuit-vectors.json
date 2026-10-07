@@ -1,0 +1,350 @@
+{
+    "_comment": "Shared by tests/Unit/CircuitSolverTest.php and scripts/check-circuit.ts, so the PHP grader and the browser workbench solve every circuit the same way. Expected values are worked from closed-form circuit formulas (series/parallel resistance, Ohm's law, a diode as Vf behind 5 ohm), not produced by either solver. Battery: 9 V behind 1.5 ohm. Red LED: 1.9 V behind 5 ohm. Voltmeter 10 Mohm, ammeter 0.01 ohm, closed switch 0.01 ohm.",
+    "tolerance": { "rel": 1e-6, "abs": 1e-9 },
+    "cases": [
+        {
+            "name": "series 330 + 470 ohm on a 9 V battery",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 330 },
+                    { "id": "R2", "type": "resistor", "value": 470 }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "R2", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "R2", "pin": "b" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": {
+                    "B1": { "i": 0.0112289457268, "v": 8.98315658141 },
+                    "R1": { "i": 0.0112289457268, "v": 3.70555208983 },
+                    "R2": { "i": 0.0112289457268, "v": 5.27760449158 }
+                },
+                "flags": []
+            }
+        },
+        {
+            "name": "parallel 1 k + 1 k on a 9 V battery",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 1000 },
+                    { "id": "R2", "type": "resistor", "value": 1000 }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "a" }, "to": { "part": "R2", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "R1", "pin": "b" }, "to": { "part": "B1", "pin": "-" } },
+                    { "id": "w4", "from": { "part": "R2", "pin": "b" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": {
+                    "B1": { "i": 0.0179461615155 },
+                    "R1": { "i": 0.00897308075773, "v": 8.97308075773 },
+                    "R2": { "i": 0.00897308075773, "v": 8.97308075773 }
+                },
+                "flags": []
+            }
+        },
+        {
+            "name": "voltage divider read by a 10 Mohm voltmeter",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 10000 },
+                    { "id": "R2", "type": "resistor", "value": 10000 },
+                    { "id": "M1", "type": "meter", "mode": "V" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "R2", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "R2", "pin": "b" }, "to": { "part": "B1", "pin": "-" } },
+                    { "id": "w4", "from": { "part": "M1", "pin": "v" }, "to": { "part": "R2", "pin": "a" } },
+                    { "id": "w5", "from": { "part": "M1", "pin": "com" }, "to": { "part": "R2", "pin": "b" } }
+                ]
+            },
+            "expect": {
+                "elements": { "R1": { "i": 0.00045019110635, "v": 4.5019110635 }, "R2": { "v": 4.49741364985 } },
+                "meters": { "M1": { "value": 4.49741364985 } },
+                "flags": []
+            }
+        },
+        {
+            "name": "red LED with a 330 ohm resistor",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 330 },
+                    { "id": "D1", "type": "led", "color": "red" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "D1", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "D1", "pin": "k" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": {
+                    "B1": { "i": 0.0210995542348, "v": 8.96835066865 },
+                    "R1": { "i": 0.0210995542348, "v": 6.96285289747 },
+                    "D1": { "i": 0.0210995542348, "v": 2.00549777117 }
+                },
+                "flags": []
+            }
+        },
+        {
+            "name": "LED fitted backwards carries no current and is flagged reverse",
+            "tolerance": { "rel": 1e-6, "abs": 1e-7 },
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 330 },
+                    { "id": "D1", "type": "led", "color": "red" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "D1", "pin": "k" } },
+                    { "id": "w3", "from": { "part": "D1", "pin": "a" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": { "R1": { "i": 0 }, "D1": { "i": 0 } },
+                "flags": [{ "part": "D1", "kind": "reverse" }]
+            }
+        },
+        {
+            "name": "open switch breaks the loop",
+            "tolerance": { "rel": 1e-6, "abs": 1e-7 },
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 330 },
+                    { "id": "S1", "type": "switch", "closed": false }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "S1", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "S1", "pin": "b" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": { "R1": { "i": 0 }, "S1": { "i": 0, "v": 9 } },
+                "flags": []
+            }
+        },
+        {
+            "name": "closed switch passes the current",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 330 },
+                    { "id": "S1", "type": "switch", "closed": true }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "S1", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "S1", "pin": "b" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": {
+                    "B1": { "i": 0.0271485023076, "v": 8.95927724654 },
+                    "R1": { "i": 0.0271485023076, "v": 8.95900576152 },
+                    "S1": { "i": 0.0271485023076, "v": 0.000271485023076 }
+                },
+                "flags": []
+            }
+        },
+        {
+            "name": "ammeter in series with 470 ohm",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "M1", "type": "meter", "mode": "A" },
+                    { "id": "R1", "type": "resistor", "value": 470 }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "M1", "pin": "v" } },
+                    { "id": "w2", "from": { "part": "M1", "pin": "com" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "R1", "pin": "b" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": { "R1": { "i": 0.0190876121397, "v": 8.97117770567 } },
+                "meters": { "M1": { "value": 0.0190876121397 } },
+                "flags": []
+            }
+        },
+        {
+            "name": "ammeter wrongly placed across the battery blows its fuse",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "M1", "type": "meter", "mode": "A" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "M1", "pin": "v" } },
+                    { "id": "w2", "from": { "part": "M1", "pin": "com" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": { "B1": { "i": 5.96026490066 } },
+                "meters": { "M1": { "value": null, "fault": "fuse" } },
+                "flags": [
+                    { "part": "B1", "kind": "overload" },
+                    { "part": "M1", "kind": "fuse" }
+                ]
+            }
+        },
+        {
+            "name": "ohmmeter across 330 + 470 ohm in series reads 800 ohm",
+            "tolerance": { "rel": 1e-5, "abs": 1e-9 },
+            "doc": {
+                "parts": [
+                    { "id": "R1", "type": "resistor", "value": 330 },
+                    { "id": "R2", "type": "resistor", "value": 470 },
+                    { "id": "M1", "type": "meter", "mode": "ohm" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "M1", "pin": "v" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "R2", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "R2", "pin": "b" }, "to": { "part": "M1", "pin": "com" } }
+                ]
+            },
+            "expect": { "meters": { "M1": { "value": 800 } }, "flags": [] }
+        },
+        {
+            "name": "ohmmeter across 1 k parallel 1 k reads 500 ohm",
+            "tolerance": { "rel": 1e-5, "abs": 1e-9 },
+            "doc": {
+                "parts": [
+                    { "id": "R1", "type": "resistor", "value": 1000 },
+                    { "id": "R2", "type": "resistor", "value": 1000 },
+                    { "id": "M1", "type": "meter", "mode": "ohm" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "M1", "pin": "v" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "a" }, "to": { "part": "R2", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "R1", "pin": "b" }, "to": { "part": "R2", "pin": "b" } },
+                    { "id": "w4", "from": { "part": "R2", "pin": "b" }, "to": { "part": "M1", "pin": "com" } }
+                ]
+            },
+            "expect": { "meters": { "M1": { "value": 500 } }, "flags": [] }
+        },
+        {
+            "name": "ohmmeter on a powered circuit refuses to read",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 330 },
+                    { "id": "M1", "type": "meter", "mode": "ohm" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "B1", "pin": "-" } },
+                    { "id": "w3", "from": { "part": "M1", "pin": "v" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w4", "from": { "part": "M1", "pin": "com" }, "to": { "part": "R1", "pin": "b" } }
+                ]
+            },
+            "expect": {
+                "meters": { "M1": { "value": null, "fault": "live" } },
+                "flags": [{ "part": "M1", "kind": "live" }]
+            }
+        },
+        {
+            "name": "continuity tester beeps across a plain wire and is silent across 330 ohm",
+            "tolerance": { "rel": 1e-5, "abs": 1e-6 },
+            "doc": {
+                "parts": [
+                    { "id": "J1", "type": "junction" },
+                    { "id": "J2", "type": "junction" },
+                    { "id": "R1", "type": "resistor", "value": 330 },
+                    { "id": "M1", "type": "meter", "mode": "cont" },
+                    { "id": "M2", "type": "meter", "mode": "cont" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "J1", "pin": "j" }, "to": { "part": "J2", "pin": "j" } },
+                    { "id": "w2", "from": { "part": "M1", "pin": "v" }, "to": { "part": "J1", "pin": "j" } },
+                    { "id": "w3", "from": { "part": "M1", "pin": "com" }, "to": { "part": "J2", "pin": "j" } },
+                    { "id": "w4", "from": { "part": "M2", "pin": "v" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w5", "from": { "part": "M2", "pin": "com" }, "to": { "part": "R1", "pin": "b" } }
+                ]
+            },
+            "expect": {
+                "meters": { "M1": { "value": 0, "beep": true }, "M2": { "value": 330, "beep": false } },
+                "flags": []
+            }
+        },
+        {
+            "name": "a wire straight across the battery is a short circuit",
+            "doc": {
+                "parts": [{ "id": "B1", "type": "battery" }],
+                "wires": [{ "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "B1", "pin": "-" } }]
+            },
+            "expect": {
+                "elements": { "B1": { "i": 6, "v": 0 } },
+                "flags": [{ "part": "B1", "kind": "overload" }]
+            }
+        },
+        {
+            "name": "100 ohm with a red LED overheats the resistor and burns the LED",
+            "doc": {
+                "parts": [
+                    { "id": "B1", "type": "battery" },
+                    { "id": "R1", "type": "resistor", "value": 100 },
+                    { "id": "D1", "type": "led", "color": "red" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "B1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "D1", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "D1", "pin": "k" }, "to": { "part": "B1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": {
+                    "R1": { "i": 0.0666666666667, "p": 0.444444444444 },
+                    "D1": { "i": 0.0666666666667, "v": 2.23333333333 }
+                },
+                "flags": [
+                    { "part": "R1", "kind": "overheat" },
+                    { "part": "D1", "kind": "burnt" }
+                ]
+            }
+        },
+        {
+            "name": "12 V bench supply, 1 k and a green LED",
+            "doc": {
+                "parts": [
+                    { "id": "V1", "type": "supply", "value": 12 },
+                    { "id": "R1", "type": "resistor", "value": 1000 },
+                    { "id": "D1", "type": "led", "color": "green" }
+                ],
+                "wires": [
+                    { "id": "w1", "from": { "part": "V1", "pin": "+" }, "to": { "part": "R1", "pin": "a" } },
+                    { "id": "w2", "from": { "part": "R1", "pin": "b" }, "to": { "part": "D1", "pin": "a" } },
+                    { "id": "w3", "from": { "part": "D1", "pin": "k" }, "to": { "part": "V1", "pin": "-" } }
+                ]
+            },
+            "expect": {
+                "elements": {
+                    "V1": { "i": 0.00984878631118, "v": 11.9980302427 },
+                    "R1": { "i": 0.00984878631118, "v": 9.84878631118 },
+                    "D1": { "i": 0.00984878631118, "v": 2.14924393156 }
+                },
+                "flags": []
+            }
+        },
+        {
+            "name": "a lone resistor with no source has no voltage and no current",
+            "tolerance": { "rel": 1e-6, "abs": 1e-9 },
+            "doc": {
+                "parts": [{ "id": "R1", "type": "resistor", "value": 330 }],
+                "wires": []
+            },
+            "expect": { "elements": { "R1": { "i": 0, "v": 0, "p": 0 } }, "flags": [] }
+        }
+    ]
+}

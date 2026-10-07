@@ -1,0 +1,204 @@
+/* ============================================================================
+   Resistor lab island
+   Loaded only on pages that render a simulation. Tailwind 4 without preflight:
+   no reset reaches the masthead or the rest of the page, and utilities are
+   generated only for classes used under resources/js/simulations.
+   Utilities are unlayered on purpose so they win over epas.css element rules
+   (a, h2, p) inside the lab without needing !important.
+   ========================================================================== */
+
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css" source(none);
+@source "../../js/simulations";
+
+@theme {
+  /* epas.css tokens, so the lab speaks the platform's palette. */
+  --color-board: #0F2A22;
+  --color-board-2: #17392E;
+  --color-board-3: #1F4A3B;
+  --color-paper: #EAEBE4;
+  --color-paper-2: #E1E3DA;
+  --color-card: #FFFDF9;
+  --color-ink: #0C120F;
+  --color-ink-2: #38433D;
+  --color-muted: #64716A;
+  --color-copper: #B4703A;
+  --color-copper-dk: #8A5228;
+  --color-copper-lt: #E0AE7E;
+  --color-pass: #2F7D55;
+  --color-pass-lt: #8FD3AC;
+  --color-caution: #B07610;
+  --color-caution-lt: #F0C46A;
+  --color-fail: #A93227;
+  --color-fail-lt: #F2A097;
+  --color-chalk: #E4E8E0;
+  --color-sage: #9FAEA2;
+  --color-lcd: #B9C4A6;
+  --color-lcd-ink: #1A2116;
+
+  --font-display: "Archivo", "Archivo Fallback", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-stage: 2.25rem;
+  --radius-stage-lg: 3.5rem;
+}
+
+/* --- Frame ------------------------------------------------------------------ */
+
+/* The lab is wider than a narrow lesson page; let it break out, centred. */
+.sim-breakout {
+  position: relative;
+  width: min(1160px, calc(100vw - 24px));
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 20px;
+}
+
+.sim-island {
+  font-family: var(--font-display);
+  color: var(--color-chalk);
+}
+
+.sim-island *,
+.sim-island *::before,
+.sim-island *::after {
+  box-sizing: border-box;
+}
+
+/* A minimal reset scoped to the lab, at zero specificity (:where) so any
+   utility class on the element still wins. Tailwind's preflight is not loaded,
+   so without this buttons keep the browser's grey face and lists their
+   markers. Nothing outside .sim-island is touched. */
+:where(.sim-island) :where(button, select, input, textarea) {
+  font: inherit;
+  color: inherit;
+}
+:where(.sim-island) :where(button) {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+:where(.sim-island) :where(ol, ul) {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+:where(.sim-island) :where(fieldset) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+:where(.sim-island) :where(h2, h3, h4, p, dl, dd, figure) {
+  margin: 0;
+}
+:where(.sim-island) :where(select) {
+  background-color: var(--color-board);
+}
+
+.sim-island button { cursor: pointer; }
+.sim-island button:disabled { cursor: not-allowed; }
+
+.sim-fallback {
+  padding: 28px;
+  border-radius: var(--radius-stage);
+  background: var(--color-board);
+  color: var(--color-chalk);
+}
+.sim-fallback__title { font-size: 18px; font-weight: 700; margin: 0 0 6px; }
+.sim-fallback__text { font-size: 14px; line-height: 1.5; color: var(--color-sage); margin: 0; }
+
+/* The faint graticule of a bench instrument, on the stage only. */
+.lab-graticule {
+  background-color: var(--color-board);
+  background-image:
+    linear-gradient(rgba(224, 174, 126, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 174, 126, .06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.lab-readout {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.01em;
+}
+
+/* Seven-segment look for the 2D meter. */
+.lab-lcd {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #C3CDB0, #AEB99A);
+  color: var(--color-lcd-ink);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, .35);
+}
+
+/* Silver and gold swatches look like metal pigment, not flat grey and yellow. */
+.lab-swatch--gold {
+  background-image: linear-gradient(135deg, #7d5f22 0%, #d8b25e 42%, #8f6d2b 58%, #c79e4c 100%) !important;
+}
+.lab-swatch--silver {
+  background-image: linear-gradient(135deg, #7f858b 0%, #e3e6e9 42%, #8d9399 58%, #c9cdd1 100%) !important;
+}
+
+.lab-range {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(228, 232, 224, .16);
+  accent-color: var(--color-copper);
+}
+.lab-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-copper-lt);
+  border: 3px solid var(--color-board);
+  box-shadow: 0 0 0 1px var(--color-copper);
+}
+.lab-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-copper-lt);
+  border: 3px solid var(--color-board);
+}
+
+.sim-island :focus-visible {
+  outline: 2.5px solid var(--color-copper-lt);
+  outline-offset: 2px;
+}
+
+/* Explain-mode tags drawn over the canvas. */
+.lab-tag {
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: rgba(15, 42, 34, .86);
+  color: #F2F4EE;
+  border: 1px solid rgba(224, 174, 126, .55);
+  transform: translate(-50%, calc(-100% - 10px));
+}
+.lab-tag::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 10px;
+  background: rgba(224, 174, 126, .8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sim-island * {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+}

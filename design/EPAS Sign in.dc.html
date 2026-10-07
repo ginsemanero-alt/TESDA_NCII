@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#E9EBE4;-webkit-font-smoothing:antialiased}
+  a{color:#8A5228;text-decoration:none}
+  a:hover{color:#0C120F}
+  :focus-visible{outline:3px solid #B4703A;outline-offset:2px;border-radius:2px}
+  [data-field]{width:100%;font-family:Archivo,sans-serif;font-size:16px;color:#0C120F;background:#FFFDF9;border:1.5px solid rgba(12,25,20,.24);border-radius:5px;transition:border-color 150ms linear,background-color 150ms linear}
+  [data-field]:focus{border-color:#0F2A22;outline:3px solid #B4703A;outline-offset:1px}
+  [data-field="error"]{border-color:#A93227;background:rgba(169,50,39,.05)}
+  [data-tab]{font-family:Archivo,sans-serif;font-size:15px;font-weight:600;cursor:pointer;background:none;border:none;padding:11px 4px 12px;color:#5F6C66;border-bottom:2.5px solid transparent;transition:color 150ms linear,border-color 150ms linear}
+  [data-tab="on"]{color:#0C120F;border-bottom-color:#B4703A}
+  [data-chip]{font-family:Archivo,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;padding:6px 10px;border-radius:4px;border:1px solid rgba(12,25,20,.2);background:#E9EBE4;color:#39443E;transition:transform 150ms cubic-bezier(.16,.84,.44,1),background-color 150ms linear}
+  [data-chip]:hover{transform:translateY(-1px)}
+  [data-chip="on"]{background:#0F2A22;border-color:#0F2A22;color:#E9EBE4}
+  [data-btn]{font-family:Archivo,sans-serif;cursor:pointer;border:none;transition:transform 150ms cubic-bezier(.16,.84,.44,1),background-color 150ms linear}
+  [data-btn]:hover{transform:translateY(-1px)}
+  [data-btn]:active{transform:translateY(0) scale(.99)}
+  [data-btn]:disabled{cursor:default;transform:none;opacity:.85}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+  @keyframes trace{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+<div style="--board:#0F2A22;--board2:#17392E;--paper:#E9EBE4;--paper2:#DEE1D8;--ink:#0C120F;--copper:#B4703A;--copper-dk:#8A5228;--pass:#2F7D55;--caution:#B07610;--fail:#A93227;--muted:#5F6C66;--e1:0 1px 2px rgba(12,25,20,.10);--e2:0 8px 20px -8px rgba(12,25,20,.22);--e3:0 26px 50px -18px rgba(12,25,20,.45);font-family:Archivo,'Helvetica Neue',Helvetica,sans-serif;color:var(--ink);min-height:100vh;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))">
+
+  <aside style="background:var(--board);color:#E4E8E0;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;justify-content:space-between;gap:32px;position:relative;overflow:hidden">
+    <div style="position:relative">
+      <a href="EPAS Landing.dc.html" style="display:inline-flex;align-items:center;gap:10px;color:#E4E8E0;margin-bottom:clamp(28px,5vw,56px)">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" style="flex:none;display:block"><rect x="1" y="1" width="28" height="28" rx="2" fill="#17392E"></rect><path d="M6 21 L6 15 L11 10 L24 10" fill="none" stroke="#B4703A" stroke-width="2"></path><circle cx="6" cy="21" r="2.4" fill="#DEE1D8"></circle><circle cx="24" cy="10" r="2.4" fill="#DEE1D8"></circle></svg>
+        <span>
+          <span style="display:block;font-weight:700;font-size:15px;line-height:1.1">EPAS NC II</span>
+          <span style="display:block;font-size:11.5px;color:#9FAAA2;line-height:1.2">Rizal National High School</span>
+        </span>
+      </a>
+      <h1 style="margin:0 0 14px;font-size:clamp(26px,3.4vw,38px);line-height:1.06;letter-spacing:-.025em;font-weight:700;max-width:22ch;text-wrap:pretty">Sign in to pick up where you stopped.</h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;color:#C6CEC6;max-width:36ch">Your progress, quiz scores, and sign-offs stay on your account, even if you switch phones.</p>
+    </div>
+
+    <div style="position:relative">
+      <svg viewBox="0 0 320 130" width="100%" style="display:block;max-width:340px;opacity:.9" aria-hidden="true">
+        <g fill="none" stroke="#B4703A" stroke-width="3">
+          <path d="M8 122 L8 66 L44 30 L150 30" style="--len:210;stroke-dasharray:210;stroke-dashoffset:210;animation:trace 600ms cubic-bezier(.22,.72,.32,1) 200ms both"></path>
+          <path d="M312 122 L312 76 L282 46 L232 46" style="--len:150;stroke-dasharray:150;stroke-dashoffset:150;animation:trace 600ms cubic-bezier(.22,.72,.32,1) 320ms both"></path>
+        </g>
+        <g style="animation:rise 300ms ease-out 700ms both">
+          <rect x="150" y="16" width="82" height="28" rx="3" fill="#C6B79B"></rect>
+          <rect x="162" y="16" width="8" height="28" fill="#6B4A2B"></rect>
+          <rect x="176" y="16" width="8" height="28" fill="#15181A"></rect>
+          <rect x="190" y="16" width="8" height="28" fill="#C4611B"></rect>
+          <rect x="220" y="16" width="6" height="28" fill="#B4923A"></rect>
+        </g>
+        <circle cx="8" cy="122" r="6" fill="#D8DCD2"></circle><circle cx="312" cy="122" r="6" fill="#D8DCD2"></circle>
+      </svg>
+      <p style="margin:16px 0 0;font-size:13.5px;line-height:1.5;color:#9FAAA2;max-width:40ch">Accounts are created by your instructor or the school admin. Nobody outside the school can enroll here.</p>
+    </div>
+  </aside>
+
+  <main style="padding:clamp(24px,4vw,48px) clamp(16px,4vw,44px);display:flex;flex-direction:column;justify-content:center;background:var(--paper)">
+    <div style="width:100%;max-width:436px;margin:0 auto">
+
+      <div style="display:flex;gap:22px;border-bottom:1px solid rgba(12,25,20,.14);margin-bottom:24px">
+        <button type="button" data-tab="{{ tSignin }}" onClick="{{ goSignin }}">Sign in</button>
+        <button type="button" data-tab="{{ tSignup }}" onClick="{{ goSignup }}">Create account</button>
+      </div>
+
+      <sc-if value="{{ isSignin }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ submit }}" style="display:grid;gap:16px">
+          <div>
+            <label for="u" style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">Username</label>
+            <input id="u" name="username" data-field="{{ fUser }}" autoComplete="username" placeholder="jhonrey.m" style="padding:13px 13px;min-height:48px">
+            <p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">The one written on the slip your instructor gave you.</p>
+          </div>
+
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+              <label for="p" style="font-size:14px;font-weight:600">Password</label>
+              <button type="button" onClick="{{ toggleReveal }}" data-btn style="background:none;font-size:13px;font-weight:600;color:var(--copper-dk);padding:2px 4px">{{ revealLabel }}</button>
+            </div>
+            <input id="p" name="password" type="{{ pwType }}" data-field="{{ fPw }}" autoComplete="current-password" style="padding:13px 13px;min-height:48px">
+          </div>
+
+          <sc-if value="{{ isError }}" hint-placeholder-val="{{ false }}">
+            <div role="alert" aria-live="polite" style="display:flex;gap:10px;padding:12px 13px;background:rgba(169,50,39,.07);border:1px solid rgba(169,50,39,.4);border-left:3px solid var(--fail);border-radius:5px;animation:nudge 260ms cubic-bezier(.36,.07,.19,.97) both">
+              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="flex:none;margin-top:1px"><circle cx="9" cy="9" r="8" fill="#A93227"></circle><path d="M9 4.6 V10" stroke="#fff" stroke-width="1.8"></path><circle cx="9" cy="12.8" r="1.1" fill="#fff"></circle></svg>
+              <p style="margin:0;font-size:13.5px;line-height:1.45;color:#7D1F18">That password does not match <strong style="font-weight:600">jhonrey.m</strong>. Check if Caps Lock is on. After 5 tries the account locks for 10 minutes, so ask your instructor to reset it instead of guessing.</p>
+            </div>
+          </sc-if>
+
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.4;cursor:pointer">
+            <input type="checkbox" checked style="width:20px;height:20px;margin:0;accent-color:#0F2A22;flex:none">
+            <span>Keep me signed in on this phone<span style="display:block;font-size:12.5px;color:var(--muted)">Do not tick this on the shop computers.</span></span>
+          </label>
+
+          <button type="submit" data-btn disabled="{{ busy }}" style="min-height:52px;background:var(--copper);color:#FFF8F1;font-size:16.5px;font-weight:600;border-radius:5px;box-shadow:var(--e2);display:flex;align-items:center;justify-content:center;gap:10px">
+            <sc-if value="{{ busy }}" hint-placeholder-val="{{ false }}">
+              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="animation:spin 700ms linear infinite"><circle cx="9" cy="9" r="7" fill="none" stroke="#FFF8F1" stroke-opacity=".35" stroke-width="2.4"></circle><path d="M9 2 A7 7 0 0 1 16 9" fill="none" stroke="#FFF8F1" stroke-width="2.4"></path></svg>
+            </sc-if>
+            {{ submitLabel }}
+          </button>
+
+          <p style="margin:0;font-size:13.5px;line-height:1.5;color:#39443E">Forgot your username or password? Ask Ma'am Villamor or Sir Delos Reyes sa electronics shop. They can reset it in one minute.</p>
+        </form>
+      </sc-if>
+
+      <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+        <form onSubmit="{{ submit }}" style="display:grid;gap:16px">
+          <div style="display:flex;gap:10px;padding:12px 13px;background:var(--paper2);border-left:3px solid var(--copper);border-radius:5px">
+            <p style="margin:0;font-size:13.5px;line-height:1.45;color:#33403A">Create an account only if your instructor told you to. They still have to approve it before the modules open, usually the same day.</p>
+          </div>
+          <div>
+            <label for="n" style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">Full name</label>
+            <input id="n" data-field placeholder="Dela Cruz, Jhon Rey P." style="padding:13px;min-height:48px">
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">
+            <div>
+              <label for="lrn" style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">LRN</label>
+              <input id="lrn" data-field inputMode="numeric" maxLength="12" placeholder="12 digits" style="padding:13px;min-height:48px;font-family:'IBM Plex Mono',monospace">
+            </div>
+            <div>
+              <label for="sec" style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">Section</label>
+              <select id="sec" data-field style="padding:13px;min-height:48px">
+                <option>Grade 11 Volt</option>
+                <option>Grade 11 Ohm</option>
+                <option>Grade 12 Ampere</option>
+                <option>Grade 12 Watt</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="p2" style="display:block;font-size:14px;font-weight:600;margin-bottom:6px">Password</label>
+            <input id="p2" data-field type="{{ pwType }}" autoComplete="new-password" style="padding:13px;min-height:48px">
+            <p style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">At least 8 characters. Do not use your LRN or your birthday.</p>
+          </div>
+          <button type="submit" data-btn disabled="{{ busy }}" style="min-height:52px;background:var(--copper);color:#FFF8F1;font-size:16.5px;font-weight:600;border-radius:5px;box-shadow:var(--e2);display:flex;align-items:center;justify-content:center;gap:10px">
+            <sc-if value="{{ busy }}" hint-placeholder-val="{{ false }}">
+              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="animation:spin 700ms linear infinite"><circle cx="9" cy="9" r="7" fill="none" stroke="#FFF8F1" stroke-opacity=".35" stroke-width="2.4"></circle><path d="M9 2 A7 7 0 0 1 16 9" fill="none" stroke="#FFF8F1" stroke-width="2.4"></path></svg>
+            </sc-if>
+            {{ signupLabel }}
+          </button>
+          <p style="margin:0;font-size:13px;line-height:1.5;color:var(--muted)">Already have an account? <a href="#" onClick="{{ goSignin }}">Sign in instead</a></p>
+        </form>
+      </sc-if>
+
+      <sc-if value="{{ isOk }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:12px;margin-top:20px;padding:14px;background:rgba(47,125,85,.09);border:1px solid rgba(47,125,85,.35);border-left:3px solid var(--pass);border-radius:5px;animation:rise 220ms cubic-bezier(.16,.84,.44,1) both">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex:none"><circle cx="10" cy="10" r="9" fill="#2F7D55"></circle><path d="M5.6 10.4 L8.6 13.4 L14.4 6.9" fill="none" stroke="#fff" stroke-width="2"></path></svg>
+          <p style="margin:0;font-size:13.5px;line-height:1.45;color:#215C3E">Signed in. Opening Module 3, page 8, where you stopped.</p>
+        </div>
+      </sc-if>
+
+      <div style="margin-top:28px;padding-top:18px;border-top:1px solid rgba(12,25,20,.12)">
+        <p style="margin:0 0 9px;font-size:12.5px;color:var(--muted)">Mockup states, for the demo</p>
+        <div style="display:flex;flex-wrap:wrap;gap:7px">
+          <button type="button" data-chip="{{ cIdle }}" onClick="{{ setIdle }}">Empty form</button>
+          <button type="button" data-chip="{{ cBusy }}" onClick="{{ setBusy }}">Signing in</button>
+          <button type="button" data-chip="{{ cErr }}" onClick="{{ setErr }}">Wrong password</button>
+          <button type="button" data-chip="{{ cOk }}" onClick="{{ setOk }}">Signed in</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;signin&quot;,&quot;signup&quot;],&quot;default&quot;:&quot;signin&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;State&quot;},&quot;showMockupStates&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;State&quot;}}">
+class Component extends DCLogic {
+  state = { mode: 'signin', status: 'idle', reveal: false };
+
+  componentDidMount(){
+    if (this.props.defaultMode === 'signup') this.setState({ mode: 'signup' });
+  }
+  componentWillUnmount(){ if (this.t) clearTimeout(this.t); }
+
+  set(status){ if (this.t) clearTimeout(this.t); this.setState({ status }); }
+
+  submit = (e) => {
+    e.preventDefault();
+    this.set('busy');
+    this.t = setTimeout(() => this.setState({ status: 'error' }), 900);
+  };
+
+  renderVals(){
+    const { mode, status, reveal } = this.state;
+    const on = (b) => b ? 'on' : 'off';
+    const err = status === 'error';
+    return {
+      isSignin: mode === 'signin', isSignup: mode === 'signup',
+      tSignin: on(mode === 'signin'), tSignup: on(mode === 'signup'),
+      goSignin: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ mode: 'signin', status: 'idle' }); },
+      goSignup: () => this.setState({ mode: 'signup', status: 'idle' }),
+      submit: this.submit,
+      busy: status === 'busy',
+      isError: err, isOk: status === 'ok',
+      fUser: err ? 'error' : 'idle', fPw: err ? 'error' : 'idle',
+      submitLabel: status === 'busy' ? 'Signing in' : 'Sign in',
+      signupLabel: status === 'busy' ? 'Creating account' : 'Create account',
+      pwType: reveal ? 'text' : 'password',
+      revealLabel: reveal ? 'Hide password' : 'Show password',
+      toggleReveal: () => this.setState(s => ({ reveal: !s.reveal })),
+      setIdle: () => this.set('idle'), setBusy: () => this.set('busy'),
+      setErr: () => this.set('error'), setOk: () => this.set('ok'),
+      cIdle: on(status === 'idle'), cBusy: on(status === 'busy'),
+      cErr: on(err), cOk: on(status === 'ok')
+    };
+  }
+}
+</script>
+</body>
+</html>

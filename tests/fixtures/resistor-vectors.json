@@ -1,0 +1,29 @@
+{
+    "_comment": "Shared by tests/Unit/ResistorColorCodeTest.php and scripts/check-resistor.ts so the PHP grader and the browser lab compute identical values. Values worked by hand from IEC 60062.",
+    "bands": [
+        { "bands": ["brown", "black", "red", "gold"], "ohms": 1000, "tolerance": 5, "min": 950, "max": 1050 },
+        { "bands": ["yellow", "violet", "red", "gold"], "ohms": 4700, "tolerance": 5, "min": 4465, "max": 4935 },
+        { "bands": ["orange", "orange", "brown", "gold"], "ohms": 330, "tolerance": 5, "min": 313.5, "max": 346.5 },
+        { "bands": ["brown", "black", "orange", "silver"], "ohms": 10000, "tolerance": 10, "min": 9000, "max": 11000 },
+        { "bands": ["red", "red", "gold", "gold"], "ohms": 2.2, "tolerance": 5, "min": 2.09, "max": 2.31 },
+        { "bands": ["green", "blue", "silver", "brown"], "ohms": 0.56, "tolerance": 1, "min": 0.5544, "max": 0.5656 },
+        { "bands": ["grey", "red", "white", "violet"], "ohms": 82000000000, "tolerance": 0.1, "min": 81918000000, "max": 82082000000 },
+        { "bands": ["brown", "green", "yellow", "red"], "ohms": 150000, "tolerance": 2, "min": 147000, "max": 153000 }
+    ],
+    "allowed": {
+        "0": ["brown", "red", "orange", "yellow", "green", "blue", "violet", "grey", "white"],
+        "1": ["black", "brown", "red", "orange", "yellow", "green", "blue", "violet", "grey", "white"],
+        "2": ["black", "brown", "red", "orange", "yellow", "green", "blue", "violet", "grey", "white", "gold", "silver"],
+        "3": ["brown", "red", "green", "blue", "violet", "grey", "gold", "silver"]
+    },
+    "current": [
+        { "volts": 9, "ohms": 330, "amps": 0.02727272727272727 },
+        { "volts": 12, "ohms": 1000, "amps": 0.012 },
+        { "volts": 1.5, "ohms": 68000, "amps": 0.000022058823529411765 },
+        { "volts": 5, "ohms": 4700, "amps": 0.0010638297872340426 }
+    ],
+    "power": [
+        { "amps": 0.012, "ohms": 1000, "watts": 0.144 },
+        { "amps": 0.02727272727272727, "ohms": 330, "watts": 0.24545454545454545 }
+    ]
+}
