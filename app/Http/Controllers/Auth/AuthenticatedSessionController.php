@@ -8,23 +8,25 @@ use App\Models\ActivityLog;
 use App\Models\Section;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Show the sign-in screen.
      */
-    public function create(): View|RedirectResponse
+    public function create(): Response|RedirectResponse
     {
         if (Auth::check()) {
             return redirect()->route('dashboard');
         }
 
-        return view('auth.sign-in', [
+        // no-store keeps the browser from restoring this page on Back after a
+        // sign-out, which would submit a CSRF token the sign-out already retired.
+        return response()->view('auth.sign-in', [
             'sections' => Section::query()->orderBy('grade_level')->orderBy('name')->get(),
-        ]);
+        ])->header('Cache-Control', 'no-store, private');
     }
 
     /**
