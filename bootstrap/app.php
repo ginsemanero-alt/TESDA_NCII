@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Railway terminates TLS at its edge; trust its X-Forwarded-* headers so
+        // asset URLs come out as https instead of being blocked as mixed content.
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'role' => EnsureUserRole::class,
         ]);
