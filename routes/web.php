@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/quizzes/{quiz}/edit', [InstructorQuizController::class, 'edit'])->name('quizzes.edit');
         Route::patch('/quizzes/{quiz}', [InstructorQuizController::class, 'update'])->name('quizzes.update');
         Route::post('/quizzes/{quiz}/items', [InstructorQuizController::class, 'storeItem'])->name('quizzes.items.store');
+        Route::post('/quizzes/{quiz}/items/generate', [InstructorQuizController::class, 'generateItems'])->name('quizzes.items.generate');
         Route::delete('/quiz-items/{item}', [InstructorQuizController::class, 'destroyItem'])->name('quizzes.items.destroy');
         Route::post('/quizzes/{quiz}/publish', [InstructorQuizController::class, 'publish'])->name('quizzes.publish');
     });

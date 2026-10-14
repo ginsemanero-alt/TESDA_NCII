@@ -60,6 +60,27 @@
     @endforeach
   </div>
 
+  <section class="card card__pad" style="margin-top:16px">
+    <h3 class="card__title" style="font-size:14.5px;margin-bottom:4px">Draft items with AI</h3>
+    <p style="margin:0 0 12px;font-size:13px;color:var(--ink-2)">Writes multiple-choice items for {{ $quiz->competency->code }} and adds them to the list above. Read every item and its answer before you publish. This can take up to a minute.</p>
+    <form method="post" action="{{ route('instructor.quizzes.items.generate', $quiz) }}" style="display:grid;gap:10px"
+      onsubmit="const b=this.querySelector('button');b.disabled=true;b.textContent='Writing items…'">
+      @csrf
+      <input name="focus" value="{{ old('focus') }}" class="field" maxlength="300" placeholder="Topic to focus on (optional), e.g. reading resistor colour codes">
+      @error('focus')<p class="field-error">{{ $message }}</p>@enderror
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <label style="display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-2)">Items
+          <select name="count" class="field" style="width:auto;min-height:38px">
+            @foreach ([3, 5, 10] as $n)
+              <option value="{{ $n }}" @selected((int) old('count', 5) === $n)>{{ $n }}</option>
+            @endforeach
+          </select>
+        </label>
+        <button type="submit" class="btn btn--sm btn--dark">Generate items</button>
+      </div>
+    </form>
+  </section>
+
   <section class="card card--flat card--accent card__pad" style="margin-top:16px">
     <h3 class="card__title" style="font-size:14.5px;margin-bottom:12px">Add an item</h3>
     <form method="post" action="{{ route('instructor.quizzes.items.store', $quiz) }}" style="display:grid;gap:10px">

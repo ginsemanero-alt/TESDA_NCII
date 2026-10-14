@@ -10,6 +10,7 @@ use App\Models\QuizItem;
 use App\Models\Section;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class InstructorContentTest extends TestCase
@@ -71,6 +72,47 @@ class InstructorContentTest extends TestCase
 
         $this->actingAs($instructor)->post(route('instructor.quizzes.publish', $quiz));
         $this->assertTrue($quiz->refresh()->is_published);
+    }
+
+    public function test_an_instructor_can_draft_quiz_items_with_ai(): void
+    {
+        config(['services.openrouter.key' => 'test-key']);
+        $content = json_encode(['items' => [
+            ['stem' => 'Which setting checks a broken wire?', 'choices' => ['DC volts', 'Continuity', 'AC volts', 'Current'], 'correct_index' => 1, 'rationale' => 'Continuity beeps on a closed path.'],
+            ['stem' => 'Missing a choice', 'choices' => ['A', 'B', 'C'], 'correct_index' => 0],
+        ]]);
+        Http::fake(['openrouter.ai/*' => Http::response(['choices' => [['message' => ['content' => "```json\n{$content}\n```"]]]])]);
+
+        $instructor = User::factory()->instructor()->create();
+        $quiz = Quiz::factory()->draft()->create(['competency_id' => Competency::factory()]);
+        QuizItem::factory()->create(['quiz_id' => $quiz->id, 'number' => 1]);
+
+        $this->actingAs($instructor)
+            ->post(route('instructor.quizzes.items.generate', $quiz), ['count' => 5, 'focus' => 'multimeter'])
+            ->assertRedirect()
+            ->assertSessionHas('status', 'Added 1 AI-drafted item. Check each answer before you publish.');
+
+        $item = $quiz->items()->where('number', 2)->first();
+        $this->assertNotNull($item, 'the malformed item is dropped and the good one is numbered after the existing one');
+        $this->assertSame('Continuity', $item->choices[$item->correct_index], 'the answer survives the choice shuffle');
+        $this->assertFalse($quiz->refresh()->is_published);
+        Http::assertSent(fn ($request): bool => $request->hasHeader('Authorization', 'Bearer test-key')
+            && str_contains($request['messages'][1]['content'], 'multimeter'));
+    }
+
+    public function test_ai_drafting_reports_a_failure_without_adding_items(): void
+    {
+        config(['services.openrouter.key' => 'test-key']);
+        Http::fake(['openrouter.ai/*' => Http::response(['error' => 'rate limited'], 429)]);
+
+        $instructor = User::factory()->instructor()->create();
+        $quiz = Quiz::factory()->draft()->create(['competency_id' => Competency::factory()]);
+
+        $this->actingAs($instructor)
+            ->post(route('instructor.quizzes.items.generate', $quiz), ['count' => 3])
+            ->assertSessionHas('status', 'The free AI limit was reached for now. Wait a minute and try again.');
+
+        $this->assertSame(0, $quiz->items()->count());
     }
 
     public function test_a_quiz_cannot_be_published_without_items_or_sections(): void

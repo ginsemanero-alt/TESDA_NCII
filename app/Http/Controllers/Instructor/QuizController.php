@@ -8,10 +8,13 @@ use App\Models\Competency;
 use App\Models\Quiz;
 use App\Models\QuizItem;
 use App\Models\Section;
+use App\Quizzes\QuizItemGenerator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use RuntimeException;
 
 class QuizController extends Controller
 {
@@ -115,6 +118,29 @@ class QuizController extends Controller
         ]);
 
         return back()->with('status', 'Item added.');
+    }
+
+    public function generateItems(Request $request, Quiz $quiz, QuizItemGenerator $generator): RedirectResponse
+    {
+        $validated = $request->validate([
+            'count' => ['required', 'integer', 'min:1', 'max:10'],
+            'focus' => ['nullable', 'string', 'max:300'],
+        ]);
+
+        try {
+            $items = $generator->generate($quiz, (int) $validated['count'], $validated['focus'] ?? null);
+        } catch (RuntimeException $e) {
+            return back()->withInput()->with('status', $e->getMessage());
+        }
+
+        $number = (int) $quiz->items()->max('number');
+        foreach ($items as $item) {
+            $quiz->items()->create([...$item, 'number' => ++$number]);
+        }
+
+        $added = count($items);
+
+        return back()->with('status', "Added {$added} AI-drafted ".Str::plural('item', $added).'. Check each answer before you publish.');
     }
 
     public function destroyItem(QuizItem $item): RedirectResponse
